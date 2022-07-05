@@ -1,0 +1,54 @@
+5) Обязательное задание
+Есть таблица students с колонками
+id int
+name varchar
+created_at datetime
+parent_id int
+a) посчитайте количество всех студентов
+b) посчитайте количество студентов с именем Иван
+c) посчитайте количество студентов созданных после 1 сентября 2020 года
+
+6) Необязательное задание, но его выполнение будет плюсом.Так же есть таблица parents (см задание 5)
+id int
+name varchar
+created_at datetime
+a) посчитайте количество студентов с родителями
+b) посчитайте количество студентов с родителями при том что имя родителя Марина
+c) посчитайте количество студентов без родителя
+
+
+Не совсем понял в каком виде нужно выполнить задание.
+Ответ на чистом SQL или в контексте Rails?
+
+5а:
+  SQl:
+    SELECT COUNT(*) FROM "students";
+  Rails:
+    Student.count
+5b:
+  SQL:
+    SELECT COUNT(*) FROM "students" WHERE "students"."name" = 'Иван';
+    либо просто: select count(*) from students where name = 'Иван';
+  Rails:
+    Student.where(name: 'Иван').count
+5c:
+  SQL:
+    SELECT COUNT(*) FROM "students" WHERE (created_at > '01.09.2020');
+  Rails:
+    Student.where("created_at > ?", "01.09.2020").count
+
+6a:
+  SQL:
+    SELECT COUNT(*) FROM "students" WHERE (parent_id is not null);
+  Rails:
+    Student.where("parent_id is not null").count
+6b:
+  SQL:
+    SELECT COUNT(*) FROM "students" INNER JOIN "parents" ON "parents"."id" = "students"."parent_id" WHERE "parents"."name" = 'Марина';
+  Rails:
+    Student.joins(:parent).where(parents: {name: 'Марина'}).count
+6c:
+  SQL:
+    SELECT COUNT(*) FROM "students" WHERE (parent_id is null);
+  Rails:
+    Student.where("parent_id is null").count
